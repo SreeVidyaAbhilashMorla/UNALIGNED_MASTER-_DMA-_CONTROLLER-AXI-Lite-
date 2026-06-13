@@ -1,4 +1,4 @@
-# UNALIGNED MASTER DMA CONTROLLER(AXI-Lite)-
+# Unaligned DMA Controller (AXI-Lite)
 A Verilog-based DMA controller that performs autonomous memory-to-memory transfers via AXI-Lite, supporting unaligned source addresses and arbitrary transfer lengths (not necessarily multiples of 4 bytes).
 
 ## Key Features
@@ -14,6 +14,14 @@ A Verilog-based DMA controller that performs autonomous memory-to-memory transfe
 The DMA controller reads unaligned data from source memory through the Read FSM, buffers data in a 16×32-bit synchronous FIFO, and writes aligned 32-bit words to destination memory using the Write FSM.
 
 <img width="1672" height="941" alt="dma_blockdiagram" src="https://github.com/user-attachments/assets/6beeac34-f27a-4738-bb6e-0ee978e6360e" />
+
+
+## Data flow
+ 1. The Read FSM fetches data from the source memory using AXI-Lite read transactions.
+ 2. Valid bytes are assembled into 32-bit words and stored in the synchronous FIFO.
+ 3. The Write FSM retrieves complete words from the FIFO.
+ 4. The Write FSM writes aligned 32-bit words to the destination memory.
+ 5. The DMA controller asserts the done signal when the transfer is complete.
 
 ## READ FSM
 ### Overview
