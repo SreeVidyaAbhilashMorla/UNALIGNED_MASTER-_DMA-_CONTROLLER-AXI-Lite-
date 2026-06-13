@@ -55,3 +55,5 @@ The Read FSM acts as an AXI-Lite master that reads data from a (possibly unalign
   ### STATE DIAGRAM
 
   <img width="3080" height="2600" alt="read_fsm_state_diagram_bw" src="https://github.com/user-attachments/assets/a96703df-eab4-4415-9d0f-a38810a9e27e" />
+ ### RTL Implementation
+ * Implemented in  [read_fsm.v](rtl/read_fsm.v)
