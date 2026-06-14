@@ -146,6 +146,10 @@ The Read FSM acts as an AXI-Lite master that reads data from a (possibly unalign
 * fifo_wr_ptr and fifo_rd_ptr are 4-bit registers; incrementing past 15 wraps to 0 automatically via natural binary overflow — no explicit wrap logic needed.
 ### Reset Behavior
 * On fifo_reset, both pointers and fifo_count are cleared to 0, effectively emptying the FIFO.
+  
+## Block Diagram
+<img width="3080" height="1960" alt="sync_fifo_block_diagram_bw" src="https://github.com/user-attachments/assets/077a030d-61a4-42dc-abc6-d97295774bb1" />
+
 
   ## RTL Implementation
 
