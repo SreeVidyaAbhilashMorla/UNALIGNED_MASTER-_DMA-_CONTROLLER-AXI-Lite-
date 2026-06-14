@@ -154,3 +154,25 @@ The Read FSM acts as an AXI-Lite master that reads data from a (possibly unalign
   ## RTL Implementation
 
    * Implemented in  [sync_fifo.v](rtl/sync_fifo.v)
+
+     ## Testbenches & Simulation
+
+     This project includes both unit-level and integration-level testbenches to verify correctness against the problem statement's worked examples.
+### Unit Tests
+
+### tb_read_fsm :
+
+* Verifies the Read FSM + FIFO in isolation using Example 1 (source_address = 0x1002, length = 10).
+*  Mocks the source memory as an AXI-Lite read slave.
+*  Confirms FIFO[0] = 3344AABB, FIFO[1] = CCDDEEFF, the trailing 2 bytes are correctly dropped, and read_done asserts at completion.
+  
+### tb_write_fsm:
+
+* Verifies the Write FSM in isolation by preloading the FIFO with the expected words from Example 1 and mocking the destination memory as an AXI-Lite write slave.
+* Confirms both words are written to 0x2000 and 0x2004 correctly, and write_done asserts at completion.
+  
+### Integration Test
+
+### tb_dma_top:
+
+End-to-end test of the complete DMA pipeline (Read FSM → FIFO → Write FSM) for both Example 1 and Example 2 from the problem statement, verifying that data read from an unaligned source address is correctly reassembled and written to the aligned destination, with trailing incomplete bytes dropped as specified.
