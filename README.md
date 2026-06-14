@@ -112,3 +112,41 @@ The Read FSM acts as an AXI-Lite master that reads data from a (possibly unalign
 ## RTL Implementation
 
 * Implemented in  [write_fsm.v](rtl/write_fsm.v)
+
+  ## Sync FIFO
+
+  ### Overview
+
+  A 16-deep, 32-bit synchronous FIFO that decouples the Read FSM and Write FSM, operating on a single shared clock domain (no clock-domain-crossing logic needed).
+
+ ### Responsibilities
+### 1.Buffering
+
+* Temporarily holds complete 32-bit words produced by the Read FSM until the Write FSM is ready to consume them.
+  
+### 2. Write Operation
+
+* When fifo_wr_en is high and fifo_full is low, fifo_wr_data is stored at fifo_wr_ptr, the pointer increments, and fifo_count increases by 1.
+  
+### 3. Read Operation
+
+* When fifo_rd_en is high and fifo_empty is low, the word at fifo_rd_ptr is presented on fifo_rd_data, the pointer increments, and fifo_count decreases by 1.
+  
+### 4. Simultaneous Read/Write
+
+* If both a valid write and a valid read occur in the same cycle, both pointers advance but fifo_count remains unchanged (one word in, one word out).
+  
+### 5. Status Flags
+
+* fifo_full = (fifo_count == 16) — Read FSM should not push when full
+* fifo_empty = (fifo_count == 0) — Write FSM should not pop when empty
+
+### 6. Pointer Wraparound
+
+* fifo_wr_ptr and fifo_rd_ptr are 4-bit registers; incrementing past 15 wraps to 0 automatically via natural binary overflow — no explicit wrap logic needed.
+### Reset Behavior
+* On fifo_reset, both pointers and fifo_count are cleared to 0, effectively emptying the FIFO.
+
+  ## RTL Implementation
+
+   * Implemented in  [sync_fifo.v](rtl/sync_fifo.v)
