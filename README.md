@@ -60,8 +60,55 @@ The Read FSM acts as an AXI-Lite master that reads data from a (possibly unalign
 ### State4-DONE
 * The FSM asserts read_done = 1 and remains here until reset is applied (preparing for the next transfer).
 
-  ### STATE DIAGRAM
+  ## STATE DIAGRAM
 
   <img width="3080" height="2600" alt="read_fsm_state_diagram_bw" src="https://github.com/user-attachments/assets/a96703df-eab4-4415-9d0f-a38810a9e27e" />
- ### RTL Implementation
+ ## RTL Implementation
  * Implemented in  [read_fsm.v](rtl/read_fsm.v)
+
+   ## WRITE FSM
+   ### Overview
+   
+   The Write FSM acts as an AXI-Lite master on the write side. It continuously pops complete 32-bit words from the FIFO and writes them to sequential, word-aligned destination addresses using the full AXI-Lite write handshake (Address, Data, and Response channels).
+
+### Write FSM — State Description
+
+### IDLE
+
+* Waits for trigger.
+* On trigger, latches destination_address into an internal address register (AWADDR_reg) that will be used and incremented for subsequent writes.
+
+### CHECK_FIFO 
+
+* Checks the FIFO status:
+  
+* If fifo_empty is 0 → a word is available; pulses fifo_rd_en for one cycle to pop it, and moves to SEND_AW.
+* If fifo_empty is 1 and read_done is 1 → no more words will ever arrive; transfer is complete, moves to DONE.
+* If fifo_empty is 1 and read_done is 0 → Read FSM is still working; stays in CHECK_FIFO waiting for more data.
+
+### SEND_AW
+
+* Captures the popped FIFO word (wdata_reg <= fifo_rd_data, valid one cycle after the pop).
+*  Drives AWADDR = AWADDR_reg and AWVALID = 1, waiting for AWREADY.
+*  Once both are high (AW handshake complete), moves to SEND_W.
+
+### SEND_W
+
+* Drives WDATA = wdata_reg and WVALID = 1, waiting for WREADY.
+* Once both are high (W handshake complete), asserts BREADY = 1 and moves to WAIT_B.
+
+### WAIT_B
+
+* Waits for BVALID (write response from slave).
+* Once BVALID and BREADY are both high, increments AWADDR_reg by 4 (next destination word) and returns to CHECK_FIFO to process the next word.
+
+### DONE
+
+* Asserts write_done = 1 and remains here until reset, signaling the entire write transfer is complete.
+
+  ## State Diagram
+  <img width="1371" height="1148" alt="write_fsm_blockdiagram" src="https://github.com/user-attachments/assets/4883f490-e5f1-40ad-b804-00a8b8a77827" />
+
+## RTL Implementation
+
+* Implemented in  [write_fsm.v](rtl/write_fsm.v)
