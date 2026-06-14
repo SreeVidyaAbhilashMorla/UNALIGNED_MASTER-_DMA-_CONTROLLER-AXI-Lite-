@@ -155,7 +155,7 @@ The Read FSM acts as an AXI-Lite master that reads data from a (possibly unalign
 
    * Implemented in  [sync_fifo.v](rtl/sync_fifo.v)
 
-     ## Testbenches & Simulation
+     ## Testbenches 
 
      This project includes both unit-level and integration-level testbenches to verify correctness against the problem statement's worked examples.
 ### Unit Tests
@@ -176,3 +176,23 @@ The Read FSM acts as an AXI-Lite master that reads data from a (possibly unalign
 ### tb_dma_top:
 
 End-to-end test of the complete DMA pipeline (Read FSM → FIFO → Write FSM) for both Example 1 and Example 2 from the problem statement, verifying that data read from an unaligned source address is correctly reassembled and written to the aligned destination, with trailing incomplete bytes dropped as specified.
+
+## Simulation 
+
+### read_fsm results:
+<img width="506" height="128" alt="Screenshot 2026-06-14 142029" src="https://github.com/user-attachments/assets/f696a182-ae55-4018-973b-5837b3ac112b" />
+
+<img width="1562" height="731" alt="Screenshot 2026-06-14 141950" src="https://github.com/user-attachments/assets/429b2a74-de2c-462a-8445-8b1ccf0da1db" />
+
+### write_fsm results:
+<img width="492" height="107" alt="Screenshot 2026-06-14 142648" src="https://github.com/user-attachments/assets/a6f81b97-924a-4a39-8a81-f9c3c8cc359e" />
+
+<img width="1562" height="731" alt="Screenshot 2026-06-14 142858" src="https://github.com/user-attachments/assets/d653be5f-055d-4083-8108-0ec7d591a4c5" />
+
+### integrated results
+
+<img width="532" height="232" alt="Screenshot 2026-06-14 144355" src="https://github.com/user-attachments/assets/986e0e76-3eaf-4a06-ad32-421c80537a06" />
+
+<img width="1548" height="663" alt="Screenshot 2026-06-14 144242" src="https://github.com/user-attachments/assets/76435636-b0bb-4725-b1cd-f398b7f0c700" />
+
+<img width="1565" height="702" alt="Screenshot 2026-06-14 144315" src="https://github.com/user-attachments/assets/da31b981-66bc-4511-a52e-adb6bd4163dc" />
